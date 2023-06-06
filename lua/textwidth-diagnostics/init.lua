@@ -37,8 +37,23 @@ EXAMPLE:
   }
   local bufnr = nil
   vim.diagnostic.set(ns, bufnr or 0, diag, opts or {})
+
 ]]
 
+local diagnostic = require("textwidth-diagnostics.diagnostic")
+
 local M = {}
+
+function M.setup(_)
+  vim.api.nvim_create_autocmd("InsertLeave", {
+    callback = function()
+      local tw = vim.api.nvim_get_option_value("textwidth", {})
+      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+      local diags = diagnostic.get_diagnostics(lines, tw, "Line is too long")
+      local ns = vim.api.nvim_create_namespace("Test")
+      vim.diagnostic.set(ns, 0, diags, {})
+    end
+  })
+end
 
 return M
