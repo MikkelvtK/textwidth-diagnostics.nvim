@@ -44,15 +44,19 @@ local diagnostic = require("textwidth-diagnostics.diagnostic")
 
 local M = {}
 
+local function init()
+  local tw = vim.api.nvim_get_option_value("textwidth", {})
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local diags = diagnostic.get_diagnostics(lines, tw)
+  local ns = vim.api.nvim_create_namespace("Test")
+  vim.diagnostic.set(ns, 0, diags, {})
+end
+
 function M.setup(_)
   vim.api.nvim_create_autocmd("InsertLeave", {
     callback = function()
-      local tw = vim.api.nvim_get_option_value("textwidth", {})
-      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-      local diags = diagnostic.get_diagnostics(lines, tw, "Line is too long")
-      local ns = vim.api.nvim_create_namespace("Test")
-      vim.diagnostic.set(ns, 0, diags, {})
-    end
+      vim.schedule(init)
+    end,
   })
 end
 

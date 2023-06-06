@@ -1,7 +1,10 @@
+local util = require("textwidth-diagnostics.util")
+
 local M = {}
 
 ---@class diagnostic
 ---@field index number
+---@field msg string
 ---@field line string
 local _diagnostic = {}
 
@@ -15,13 +18,13 @@ end
 -- @tparam number tw
 -- @tparam string msg
 -- @treturn table
-function _diagnostic:transform(tw, msg)
+function _diagnostic:transform(tw)
   return {
     lnum = self.index - 1,
     end_lnum = self.index - 1,
     col = tw,
     end_col = #self.line,
-    message = msg,
+    message = self.msg,
     source = "textwidth-diagnostics.nvim",
     severity = vim.diagnostic.severity.INFO,
   }
@@ -31,9 +34,8 @@ end
 --- parameter lines
 -- @tparam string list lines
 -- @tparam number tw
--- @tparam string msg
 -- @treturn table
-function M.get_diagnostics(lines, tw, msg)
+function M.get_diagnostics(lines, tw)
   if lines == nil then
     return {}
   end
@@ -41,8 +43,12 @@ function M.get_diagnostics(lines, tw, msg)
   local diags = {}
   for index, line in ipairs(lines) do
     if #line > tw then
-      local d = _diagnostic:new({ index = index, line = line })
-      table.insert(diags, d:transform(tw, msg))
+      local d = _diagnostic:new({
+        index = index,
+        line = line,
+        msg = util.format_msg(tw, #line),
+      })
+      table.insert(diags, d:transform(tw))
     end
   end
 
