@@ -41,23 +41,19 @@ EXAMPLE:
 ]]
 
 local diagnostic = require("textwidth-diagnostics.diagnostic")
+local config = require("textwidth-diagnostics.config")
 
 local M = {}
 
-local function init()
+function M.init()
   local tw = vim.api.nvim_get_option_value("textwidth", {})
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local diags = diagnostic.get_diagnostics(lines, tw)
-  local ns = vim.api.nvim_create_namespace("Test")
-  vim.diagnostic.set(ns, 0, diags, {})
+  vim.diagnostic.set(config.namespace, 0, diags, {})
 end
 
 function M.setup(_)
-  vim.api.nvim_create_autocmd("InsertLeave", {
-    callback = function()
-      vim.schedule(init)
-    end,
-  })
+
 end
 
 return M
