@@ -19,41 +19,40 @@ end
 -- @tparam number tw
 -- @tparam string msg
 -- @treturn table
-function _diagnostic:transform(tw)
+function _diagnostic:transform()
   return {
     lnum = self.index - 1,
     end_lnum = self.index - 1,
-    col = tw,
+    col = config.textwidth,
     end_col = #self.line,
     message = self.msg,
     source = "textwidth-diagnostics.nvim",
-    severity = config.options.severity,
+    severity = vim.diagnostic.severity[config.options.severity],
   }
 end
 
 --- Function to collect diagnostics for the lines passed in the
 --- parameter lines
 -- @tparam string list lines
--- @tparam number tw
--- @treturn table
-function M.get_diagnostics(lines, tw)
+-- @tparam number bufnr
+function M.create_diagnostics(lines, bufnr)
   if lines == nil then
-    return {}
+    return
   end
 
   local diags = {}
   for index, line in ipairs(lines) do
-    if #line > tw then
+    if #line > config.textwidth then
       local d = _diagnostic:new({
         index = index,
         line = line,
-        msg = util.format_msg(tw, #line),
+        msg = util.format_msg(config.textwidth, #line),
       })
-      table.insert(diags, d:transform(tw))
+      table.insert(diags, d:transform())
     end
   end
 
-  return diags
+  vim.diagnostic.set(config.namespace, bufnr, diags, config.options.diagnostic_opts)
 end
 
 return M

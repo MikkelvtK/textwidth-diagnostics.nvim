@@ -15,22 +15,22 @@ local config = require("textwidth-diagnostics.config")
 local M = {}
 
 function M.refresh()
-
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  diagnostic.create_diagnostics(lines, bufnr)
 end
 
-function M.start()
+function M.toggle()
 
-end
-
-function M.init()
-  local tw = vim.api.nvim_get_option_value("textwidth", {})
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-  local diags = diagnostic.get_diagnostics(lines, tw)
-  vim.diagnostic.set(config.namespace, 0, diags, {})
 end
 
 function M.setup(options)
   config.setup(options)
+  vim.diagnostic.config({
+    float = {
+      source = true,
+    }
+  }, config.namespace)
 end
 
 return M
