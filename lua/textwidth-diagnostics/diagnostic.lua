@@ -1,4 +1,5 @@
 local util = require("textwidth-diagnostics.util")
+local config = require("textwidth-diagnostics.config")
 
 local M = {}
 
@@ -26,7 +27,7 @@ function _diagnostic:transform(tw)
     end_col = #self.line,
     message = self.msg,
     source = "textwidth-diagnostics.nvim",
-    severity = vim.diagnostic.severity.INFO,
+    severity = config.options.severity,
   }
 end
 
