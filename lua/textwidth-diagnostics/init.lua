@@ -21,12 +21,12 @@ function M.refresh()
   diagnostic.create_diagnostics(lines, bufnr)
 end
 
--- TODO: Disable by default
 -- TODO: Create popup with diagnostics results
 function M.toggle()
   local bufnr = util.get_bufnr()
   if vim.diagnostic.is_disabled(bufnr, config.namespace) then
     vim.diagnostic.enable(bufnr, config.namespace)
+    M.refresh()
   else
     vim.diagnostic.disable(bufnr, config.namespace)
   end
@@ -34,6 +34,9 @@ end
 
 function M.setup(options)
   config.setup(options)
+
+  local bufnr = util.get_bufnr()
+  vim.diagnostic.disable(bufnr, config.namespace)
 end
 
 return M
