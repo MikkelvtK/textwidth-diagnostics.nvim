@@ -17,7 +17,6 @@ end
 --- Function to transform the _diagnostic into a diagnostic
 --- table that can be used by Neovim.
 -- @tparam number tw
--- @tparam string msg
 -- @treturn table
 function _diagnostic:transform(tw)
   return {
@@ -33,7 +32,7 @@ end
 
 --- Function to collect diagnostics for the lines passed in the
 --- parameter lines
--- @tparam string list lines
+-- @tparam string[] lines
 -- @tparam number bufnr
 function M.create_diagnostics(lines, bufnr)
   if lines == nil then
