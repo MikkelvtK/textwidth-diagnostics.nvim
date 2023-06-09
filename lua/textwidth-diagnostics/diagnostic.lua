@@ -26,7 +26,7 @@ function _diagnostic:transform()
     col = config.textwidth,
     end_col = #self.line,
     message = self.msg,
-    source = "textwidth-diagnostics.nvim",
+    source = "[textwidth-exceeded]",
     severity = vim.diagnostic.severity[config.options.severity],
   }
 end

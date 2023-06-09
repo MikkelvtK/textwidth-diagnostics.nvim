@@ -11,6 +11,7 @@ Above all else, this plugin should help me understand the neovim landscape!
 
 local diagnostic = require("textwidth-diagnostics.diagnostic")
 local config = require("textwidth-diagnostics.config")
+local util = require("textwidth-diagnostics.util")
 
 local M = {}
 
@@ -21,16 +22,16 @@ function M.refresh()
 end
 
 function M.toggle()
-
+  local bufnr = util.get_bufnr()
+  if vim.diagnostic.is_disabled(bufnr, config.namespace) then
+    vim.diagnostic.enable(bufnr, config.namespace)
+  else
+    vim.diagnostic.disable(bufnr, config.namespace)
+  end
 end
 
 function M.setup(options)
   config.setup(options)
-  vim.diagnostic.config({
-    float = {
-      source = true,
-    }
-  }, config.namespace)
 end
 
 return M
