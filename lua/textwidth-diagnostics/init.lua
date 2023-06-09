@@ -26,7 +26,10 @@ function M.toggle()
   local bufnr = util.get_bufnr()
   if vim.diagnostic.is_disabled(bufnr, config.namespace) then
     vim.diagnostic.enable(bufnr, config.namespace)
-    M.refresh()
+
+    if vim.fn.expand("<afile>") then
+      M.refresh()
+    end
   else
     vim.diagnostic.disable(bufnr, config.namespace)
   end
