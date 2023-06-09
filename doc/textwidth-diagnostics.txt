@@ -1,5 +1,67 @@
+*textwidth-diagnostics.nvim*
 ==============================================================================
-                                                  *textwidth-diagnostics.nvim*
 
+Table of contents
+    - introduction                   |textwidth-diagnostics.nvim-introduction|
+    - Installation                   |textwidth-diagnostics.nvim-installation|
+    - Configuration                 |textwidth-diagnostics.nvim-configuration|
+    - Usage                                 |textwidth-diagnostics.nvim-usage|
 
+==============================================================================
+                                     *textwidth-diagnostics.nvim-introduction*
+Introduction
+
+Very simple plugin to help you indicate whether the length of the lines of
+your code uphold the textwidth. Sometimes you don't want to your line to be
+wrapping or a vertical column to indicate the textwidth. For this reason I
+made this plugin. By default it will be disabled, but when enabled it will use
+the diagnostics-api of Neovim to give the user hints or info.
+
+==============================================================================
+                                     *textwidth-diagnostics.nvim-installation*
+Installation
+
+LAZY.NVIM ~
+>
+    {
+        "MikkelvtK/textwidth-diagnostics.nvim",
+        config = true,
+    }
+<
+PACKER ~
+>
+    use({
+        "MikkelvtK/textwidth-diagnostics.nvim",
+        config = function()
+            require("textwidth-diagnostics").setup({})
+        end,
+    })
+<
+==============================================================================
+                                    *textwidth-diagnostics.nvim-configuration*
+Configuration
+>
+    options = {
+        -- Severity will determine what diagnostic type will be shown. One of
+        -- four values are available: ERROR, WARNING, HINT, INFO.
+        severity = "INFO",
+
+        -- Textwidth will set when the diagnostic messages will popup. If left
+        -- empty, it will take the textwidth set in the options of Neovim.
+        textwidth = 80,
+    }
+<
+==============================================================================
+                                            *textwidth-diagnostics.nvim-usage*
+Usage
+
+COMMAND ~
+
+`TextwidthDiagnosticsToggle` toggle all the visibility of the diagnostics
+
+EXAMPLE KEYMAPS ~
+>
+    vim.keymap.set("n", "<leader>twt", "<cmd>TextwidthDiagnosticsToggle<cr>",
+        { silent = true, noremap = true })
+<
 vim:tw=78:ts=8:ft=help:norl:
