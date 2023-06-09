@@ -19,11 +19,11 @@ end
 -- @tparam number tw
 -- @tparam string msg
 -- @treturn table
-function _diagnostic:transform()
+function _diagnostic:transform(tw)
   return {
     lnum = self.index - 1,
     end_lnum = self.index - 1,
-    col = config.textwidth,
+    col = tw,
     end_col = #self.line,
     message = self.msg,
     source = "[textwidth-exceeded]",
@@ -40,19 +40,21 @@ function M.create_diagnostics(lines, bufnr)
     return
   end
 
+  local options = config.options
+  local tw = options.textwidth or vim.api.nvim_get_option_value("textwidth", {})
   local diags = {}
   for index, line in ipairs(lines) do
-    if #line > config.textwidth then
+    if #line > tw then
       local d = _diagnostic:new({
         index = index,
         line = line,
-        msg = util.format_msg(config.textwidth, #line),
+        msg = util.format_msg(tw, #line),
       })
-      table.insert(diags, d:transform())
+      table.insert(diags, d:transform(tw))
     end
   end
 
-  vim.diagnostic.set(config.namespace, bufnr, diags, config.options.diagnostic_opts)
+  vim.diagnostic.set(config.namespace, bufnr, diags, {})
 end
 
 return M
