@@ -16,9 +16,7 @@ local util = require("textwidth-diagnostics.util")
 local M = {}
 
 function M.refresh()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  diagnostic.create_diagnostics(lines, bufnr)
+  diagnostic.init()
 end
 
 -- TODO: Create popup with diagnostics results
@@ -26,10 +24,6 @@ function M.toggle()
   local bufnr = util.get_bufnr()
   if vim.diagnostic.is_disabled(bufnr, config.namespace) then
     vim.diagnostic.enable(bufnr, config.namespace)
-
-    if vim.fn.expand("<afile>") then
-      M.refresh()
-    end
   else
     vim.diagnostic.disable(bufnr, config.namespace)
   end

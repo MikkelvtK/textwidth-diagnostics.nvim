@@ -34,10 +34,8 @@ end
 --- parameter lines
 -- @tparam string[] lines
 -- @tparam number bufnr
-function M.create_diagnostics(lines, bufnr)
-  if lines == nil then
-    return
-  end
+function M.create_diagnostics(lines)
+  lines = lines or {}
 
   local options = config.options
   local tw = options.textwidth or vim.api.nvim_get_option_value("textwidth", {})
@@ -53,7 +51,23 @@ function M.create_diagnostics(lines, bufnr)
     end
   end
 
+  return diags
+end
+
+--- Function that sets the diagnostics
+-- @tparam number bufnr
+-- @tparam table diags
+function M.set_diagnostics(bufnr, diags)
   vim.diagnostic.set(config.namespace, bufnr, diags, {})
+end
+
+--- Function to initialise setting the diagnostics
+function M.init()
+  local bufnr = util.get_bufnr()
+  local lines = util.get_lines(bufnr)
+  local diags = M.create_diagnostics(lines)
+
+  M.set_diagnostics(bufnr, diags)
 end
 
 return M
