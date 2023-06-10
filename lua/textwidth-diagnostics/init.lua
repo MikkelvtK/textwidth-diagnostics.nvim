@@ -31,6 +31,7 @@ end
 
 function M.setup(options)
   config.setup(options)
+  diagnostic.init()
 
   local bufnr = util.get_bufnr()
   vim.diagnostic.disable(bufnr, config.namespace)
